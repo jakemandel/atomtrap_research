@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Cursor
+import pandas as pd
+import seaborn as sns
 
 # Mouse click function to store coordinates
 def storeclick(event):
@@ -18,11 +20,14 @@ def storeclick(event):
         plt.close()
     return
 
-x = np.arange(0,4*np.pi,.1)
-y = np.sin(x)
+#x = np.arange(0,4*np.pi,.1)
+#y = np.sin(x)
+x = [-.361, -.094, 0.012, 0.08, .236, .378]
+y = [1, 2, 3, 3.1, 4.2, .9]
 
 fig = plt.figure()
 ax = fig.add_subplot()
+ax.scatter(x,y)
 ax.plot(x,y)
 
 coords = []
@@ -38,117 +43,115 @@ plt.show()
 # 300/Difference = conv     # 300MHz FSR
 # q = (Difference/300)*10   # 10MHz conversion for trap transition
 
-conv = 326.086 # Conversion from Fabry Perot (MHZ/V)
+conv = 539.57 # Conversion from Fabry Perot (MHZ/V)
 
 # x-axis difference before conversion
-c0 = coords[0][0] - coords[0][0]
-c1 = coords[1][0] - coords[0][0]
-c2 = coords[2][0] - coords[0][0]
-c3 = coords[3][0] - coords[0][0]
-c4 = coords[4][0] - coords[0][0]
-c5 = coords[5][0] - coords[0][0]
-# n = 0
-# c = [] 
-# for i in coords:
-#     j = i[0] - coords[0][0]
-#     c.append(j)
-# print(c)
+n = 0
+c = [] 
+for i in coords:
+    j = i[0] - coords[0][0]
+    c.append(j)
 
 # Difference after conversion (MHz/V)
-d0 = c0*conv
-d1 = c1*conv
-d2 = c2*conv
-d3 = c3*conv
-d4 = c4*conv
-d5 = c5*conv
-# d = []
-# for i in c:
-#     dd = i*conv
-#     d.append(dd)
-# print(d)
+d = []
+for i in c:
+     dd = i*conv
+     d.append(dd)
 
-# Accepted Values
-
+# Known Values
 # Rubidium 87 Trap Transition
-Rb87t_0 = 0
-Rb87t_1 = 133.5
-Rb87t_2 = 212
-Rb87t_3 = 267
-Rb87t_4 = 345.5
-Rb87t_5 = 424
-#Rb87t = [0 133.5 212 267 345.5 424]
-
+Rb87t = np.array([0,133.5,212,267,345.5,424])
 # Rubidium 87 Pump
-Rb87p_0 = 0
-Rb87p_1 = 78.5
-Rb87p_2 = 114.5
-Rb87p_3 = 157
-Rb87p_4 = 193
-Rb87p_5 = 229
-#Rb87p = [0 78.5 114.5 157 193 229]
-
+Rb87p = np.array([0,78.5,114.5,157,193,229])
 # Rubidium 85 (2)
-Rb85t_0 = 0
-Rb85t_1 = 60.5
-Rb85t_2 = 92
-Rb85t_3 = 121
-Rb85t_4 = 152.5
-Rb85t_5 = 184
-#Rb85t = [0 60.5 92 121 152.5 184]
-
+Rb85t = np.array([0,60.5,92,121,152.5,184])
 # Rubidium 85 (4)
-Rb85_0 = 0
-Rb85_1 = 31.5
-Rb85_2 = 46
-Rb85_3 = 63
-Rb85_4 = 77.5
-Rb85_5 = 92
-#Rb85 = [0 31.5 46 63 77.5 92]
+Rb85 = np.array([0,31.5,46,63,77.5,92])
 
 # % Difference from transition - Rb 87 Trap
-Rb87t_0p = (d0-Rb87t_0)*100
-Rb87t_1p = (d1-Rb87t_1)*100
-Rb87t_2p = (d2-Rb87t_2)*100
-Rb87t_3p = (d3-Rb87t_3)*100
-Rb87t_4p = (d4-Rb87t_4)*100
-Rb87t_5p = (d5-Rb87t_5)*100
-#
+Rb87t_perc = []
+for i in range(1, 6):
+    R1 = (abs(d[i]-Rb87t[i])/(Rb87t[i]))*100
+    Rb87t_perc.append(R1)
 
 # % Difference from transition - Rb87 pump
-Rb87t_0p = (d0-Rb87t_0)*100
-Rb87t_1p = (d1-Rb87t_1)*100
-Rb87t_2p = (d2-Rb87t_2)*100
-Rb87t_3p = (d3-Rb87t_3)*100
-Rb87t_4p = (d4-Rb87t_4)*100
-Rb87t_5p = (d5-Rb87t_5)*100
+Rb87p_perc = []
+for i in range(1, 6):
+    R2 = (abs(d[i]-Rb87p[i])/(Rb87p[i]))*100
+    Rb87p_perc.append(R2)
 
 # % Difference from transition - Rb85 (2)
-Rb87t_0p = (d0-Rb87t_0)*100
-Rb87t_1p = (d1-Rb87t_1)*100
-Rb87t_2p = (d2-Rb87t_2)*100
-Rb87t_3p = (d3-Rb87t_3)*100
-Rb87t_4p = (d4-Rb87t_4)*100
-Rb87t_5p = (d5-Rb87t_5)*100
+Rb85t_perc = []
+for i in range(1, 6):
+    R3 = (abs(d[i]-Rb85t[i])/(Rb85t[i]))*100
+    Rb85t_perc.append(R3)
 
 # % Difference from transition - Rb85 (2)
-Rb87t_0p = (d0-Rb87t_0)*100
-Rb87t_1p = (d1-Rb87t_1)*100
-Rb87t_2p = (d2-Rb87t_2)*100
-Rb87t_3p = (d3-Rb87t_3)*100
-Rb87t_4p = (d4-Rb87t_4)*100
-Rb87t_5p = (d5-Rb87t_5)*100
+Rb85_perc = []
+for i in range(1, 6):
+    R4 = (abs(d[i]-Rb85[i])/(Rb85[i]))*100
+    Rb85_perc.append(R4)
 
 # Intervals
-interval1 = abs(c1-c0)
-interval2 = abs(c2-c1)
-interval3 = abs(c3-c2)
-interval4 = abs(c4-c3)
-interval5 = abs(c5-c4)
+interval = []
+for i in range(1, 6):
+    k = d[i]-d[i-1]
+    if k<0:
+        print("Cursor interval c[i]-c[i-1] is not in increasing order.")
+        break
+    else:
+        interval.append(k)
+interval_col = pd.DataFrame({'Intervals': interval})
+print(interval_col)
+
+# Interval Change in MHz (Percent Difference)
+# Rb 87 Trap
+Rb87t_pint = []
+for i in range(0, 5):
+    R1 = (abs(interval[i]-(Rb87t[i+1]-Rb87t[i]))/(Rb87t[i+1]-Rb87t[i]))*100
+    Rb87t_pint.append(R1)
+
+# Rb87 Pump
+Rb87p_pint = []
+for i in range(0, 5):
+    R2 = (abs(interval[i]-(Rb87p[i+1]-Rb87p[i]))/(Rb87p[i+1]-Rb87p[i]))*100
+    Rb87p_pint.append(R2)
+
+# Rb85 (2)
+Rb85t_pint = []
+for i in range(0, 5):
+    R3 = (abs(interval[i]-(Rb85t[i+1]-Rb85t[i]))/(Rb85t[i+1]-Rb85t[i]))*100
+    Rb85t_pint.append(R3)
+
+# Rb85 (4)
+Rb85_pint = []
+for i in range(0, 5):
+    R4 = (abs(interval[i]-(Rb85[i+1]-Rb85[i]))/(Rb85[i+1]-Rb85[i]))*100
+    Rb85_pint.append(R4)
 
 
+# Percentage Heat Map (difference from transition)
+index= ['Peak 2', 'Peak 3', 'Peak 4', 'Peak 5', 'Peak 6']
+percentile_list = pd.DataFrame(
+    {'Rb87 Trap': Rb87t_perc,
+     'Rb87 Pump': Rb87p_perc,
+     'Rb85 (2)': Rb85t_perc,
+     'Rb85 (4)': Rb85_perc
+    }, index = index)
+print(percentile_list)
+sns.heatmap(percentile_list, cmap = 'ocean', annot = True)
+plt.show()
 
-
-
-
+# Interval Percentage Heat Map
+index= ['Interval 1', 'Interval 2', 'Interval 3', 'Interval 4', 'Interval 5']
+percentile_list2 = pd.DataFrame(
+    {'Rb87 Trap': Rb87t_pint,
+     'Rb87 Pump': Rb87p_pint,
+     'Rb85 (2)': Rb85t_pint,
+     'Rb85 (4)': Rb85_pint
+    }, index = index)
+print(percentile_list2)
+sns.heatmap(percentile_list2, cmap = 'ocean', annot = True)
+plt.show()
 
 
